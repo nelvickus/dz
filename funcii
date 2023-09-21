@@ -15,3 +15,17 @@ main()
 	
 		printf ("Ответ: %.3f", sin(pow(x, 0.5*y))+pow(y+0.0008, 1/5));
 		getchar ();
+
+sin()
+	{
+	    setlocale(LC_ALL, "RUS");
+
+		double gr;
+
+		puts("Введите градусы:");
+		scanf("%lf", &gr);
+
+		printf("Ответ: %.6f", (sin(gr * M_PI / 180) ));
+		getchar ();
+}
+ 
