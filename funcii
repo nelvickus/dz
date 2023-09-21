@@ -28,4 +28,28 @@ sin()
 		printf("Ответ: %.6f", (sin(gr * M_PI / 180) ));
 		getchar ();
 }
+
+
+#include <locale.h>
+#include <stdio.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+
+
+main()
+	{
+	    setlocale(LC_ALL, "RUS");
+
+		double y, b,x,a;
+		float p = 0.5;
+
+		puts("Введите x");
+		scanf("%lf", &x);
+		printf("%lf",p);
+		b = exp(sqrt(fabs(x)));
+		a = log(p*p + x*x*x);
+		printf("Ответ: %.4f при x=%f", pow(a,3.)/pow(b,2. ), x);
+		getchar ();
+}
  
