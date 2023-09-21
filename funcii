@@ -1,0 +1,15 @@
+#include <locale.h>
+#include <stdio.h>
+#include <math.h>
+
+main()
+	{
+	    setlocale(LC_ALL, "RUS");
+
+		double x,y;
+		puts("Введите х, у:");
+		scanf("%Lf %Lf", &x,&y);
+
+	
+		printf ("Ответ: %.3f", sin(pow(x, 0.5*y))+pow(y+0.0008, 1/5));
+		getchar ();
