@@ -1,0 +1,4 @@
+Canonical 2004 Ubuntu Linux 0,00
+Apple 2001 10.0 MacOS 1199,00
+Microsoft 1995 95 Windows 99,00
+RedHat 2002 Fedora Linux 0,00
