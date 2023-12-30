@@ -13,14 +13,156 @@ struct OperatingSystem {
     char name[MAX_LENGTH];
     float price;
 };
+
+void writeDataToFile(struct OperatingSystem* data, int numRecords, char* filename);//–ó–∞–ø–∏—Å—å –≤ —Ñ–∞–π–ª
+struct OperatingSystem* readDataFromFile(int* numRecords, char* filename);//–ß—Ç–µ–Ω–∏–µ –∏–∑ —Ñ–∞–π–ª–∞
+void displayData(struct OperatingSystem* data, int numRecords);//–í—ã–≤–æ–¥ –¥–∞–Ω–Ω—ã—Ö
+struct OperatingSystem* searchData(struct OperatingSystem* data, int numRecords, struct OperatingSystem key);//–ü–æ–∏—Å–∫
+void addRecord(struct OperatingSystem** data, int* numRecords, struct OperatingSystem newRecord);//–î–æ–±–∞–≤–ª–µ–Ω–∏–µ –∑–∞–ø–∏—Å–∏
+void digitalSort(struct OperatingSystem* array, int size);//–ü–æ—Ä–∞–∑—Ä—è–¥–Ω–∞—è —Å–æ—Ä—Ç–∏—Ä–æ–≤–∫–∞
+char findMaxChar(struct OperatingSystem* array, int size);//–ü–æ–∏—Å–∫ –Ω–∞–∏–±–æ–ª—å—à–µ–≥–æ —ç–ª–µ–º–µ–Ω—Ç–∞
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    struct OperatingSystem* data = NULL;
+    int numRecords = 0;
+    int choice;
+    char filename[MAX_LENGTH];
+    int n = 0;
+
+    printf("–í–≤–µ–¥–∏—Ç–µ –∏–º—è —Ñ–∞–π–ª–∞: ");
+    scanf("%s", filename);
+
+    while (1) {
+        printf("\n---------- –ú–µ–Ω—é ----------\n");
+        printf("1. –ó–∞–≥—Ä—É–∑–∫–∞ –¥–∞–Ω–Ω—ã—Ö –∏–∑ —Ñ–∞–π–ª–∞\n");
+        printf("2. –í—ã–≤–µ—Å—Ç–∏ –¥–∞–Ω–Ω—ã–µ\n");
+        printf("3. –ü–æ–∏—Å–∫ –∑–∞–ø–∏—Å–∏\n");
+        printf("4. –°–æ—Ä—Ç–∏—Ä–æ–≤–∫–∞ –∑–∞–ø–∏—Å–µ–π\n");
+        printf("5. –°–æ—Ö—Ä–∞–Ω–∏—Ç—å –¥–∞–Ω–Ω—ã–µ –≤ —Ñ–∞–π–ª\n");
+        printf("6. –î–æ–±–∞–≤–∏—Ç—å –Ω–æ–≤—É—é –∑–∞–ø–∏—Å—å\n");
+        printf("0. –í—ã—Ö–æ–¥\n");
+        printf("–í–≤–µ–¥–∏—Ç–µ —Å–≤–æ–π –≤—ã–±–æ—Ä: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 0:
+            break;
+        case 1:
+        {
+            data = readDataFromFile(&numRecords, filename);
+            if (data != NULL) printf("–î–∞–Ω–Ω—ã–µ —É—Å–ø–µ—à–Ω–æ –∑–∞–≥—Ä—É–∂–µ–Ω—ã –∏–∑ —Ñ–∞–π–ª–∞.\n");
+
+            break;
+        }
+        case 2:
+        {
+            if (data == NULL || numRecords == 0) printf("–ù–µ—Ç –¥–∞–Ω–Ω—ã—Ö –¥–ª—è –ø–µ—á–∞—Ç–∏.\n");
+            else displayData(data, numRecords);
+
+            break;
+        }
+        case 3:
+        {
+            int searchChoice;
+            struct OperatingSystem key = { "", 0, " ", " ", 0.f };
+
+            printf("–í—ã–±–µ—Ä–∏—Ç–µ –∫—Ä–∏—Ç–µ—Ä–∏–π –ø–æ–∏—Å–∫–∞:\n");
+            printf("1. –†–∞–∑—Ä–∞–±–æ—Ç—á–∏–∫\n");
+            printf("2. –ì–æ–¥ –≤—ã–ø—É—Å–∫–∞\n");
+            printf("3. –í–µ—Ä—Å–∏—è\n");
+            printf("–í–≤–µ–¥–∏—Ç–µ —Å–≤–æ–π –≤—ã–±–æ—Ä: ");
+            scanf("%d", &searchChoice);
+
+            switch (searchChoice)
+            {
+            case 1:
+            {
+                printf("–í–≤–µ–¥–∏—Ç–µ —Ä–∞–∑—Ä–∞–±–æ—Ç—á–∏–∫–∞: ");
+                scanf("%s", key.developer);
+                break;
+            }
+            case 2:
+            {
+                printf("–í–≤–µ–¥–∏—Ç–µ –≥–æ–¥ –≤—ã–ø—É—Å–∫–∞: ");
+                scanf("%d", &key.yearReleased);
+                break;
+            }
+            case 3:
+            {
+                printf("–í–≤–µ–¥–∏—Ç–µ –≤–µ—Ä—Å–∏—é: ");
+                scanf("%s", key.version);
+                break;
+            }
+            }
+
+            struct OperatingSystem* foundRecords = searchData(data, numRecords, key);
+            int numFoundRecords = 0;
+            for (int i = 0; i < numRecords; i++)
+            {
+                if (foundRecords[i].yearReleased == 0) break;
+                numFoundRecords++;
+            }
+
+            printf("–ù–∞–π–¥–µ–Ω–æ –∑–∞–ø–∏—Å–µ–π: %d\n", numFoundRecords);
+            displayData(foundRecords, numFoundRecords);
+            break;
+        }
+        case 4:
+        {
+            digitalSort(data, numRecords);
+            displayData(data, numRecords);
+            break;
+        }
+        case 5:
+        {
+            if (data == NULL || numRecords == 0) printf("–ù–µ—Ç –¥–∞–Ω–Ω—ã—Ö –¥–ª—è —Å–æ—Ö—Ä–∞–Ω–µ–Ω–∏—è.\n");
+            else
+            {
+                writeDataToFile(data, numRecords, filename);
+                printf("–î–∞–Ω–Ω—ã–µ —É—Å–ø–µ—à–Ω–æ —Å–æ—Ö—Ä–∞–Ω–µ–Ω—ã –≤ —Ñ–∞–π–ª.\n");
+            }
+            break;
+        }
+        case 6:
+        {
+            struct OperatingSystem newRecord;
+            printf("–í–≤–µ–¥–∏—Ç–µ –¥–∞–Ω–Ω—ã–µ –¥–ª—è –Ω–æ–≤–æ–π –∑–∞–ø–∏—Å–∏:\n");
+            printf("–†–∞–∑—Ä–∞–±–æ—Ç—á–∏–∫: ");
+            scanf("%s", newRecord.developer);
+            printf("–ì–æ–¥ –≤—ã–ø—É—Å–∫–∞: ");
+            scanf("%d", &newRecord.yearReleased);
+            printf("–í–µ—Ä—Å–∏—è: ");
+            scanf("%s", newRecord.version);
+            printf("–ù–∞–∑–≤–∞–Ω–∏–µ: ");
+            scanf("%s", newRecord.name);
+            printf("–¶–µ–Ω–∞: ");
+            scanf("%f", &newRecord.price);
+            addRecord(&data, &numRecords, newRecord);
+            printf("–ù–æ–≤–∞—è –∑–∞–ø–∏—Å—å –¥–æ–±–∞–≤–ª–µ–Ω–∞.\n");
+            break;
+        }
+        default:
+        {
+            printf("–ù–µ–ø—Ä–∞–≤–∏–ª—å–Ω—ã–π –≤—ã–±–æ—Ä. –ü–æ–∂–∞–ª—É–π—Å—Ç–∞, –ø–æ–≤—Ç–æ—Ä–∏—Ç–µ –ø–æ–ø—ã—Ç–∫—É.\n");
+            break;
+        }
+        }
+        if (choice == 0) break;
+    }
+    free(data);
+    return 0;
+}
+
+
 void writeDataToFile(struct OperatingSystem* data, int numRecords, char* filename) {
     FILE* file = fopen(filename, "w");
 
     if (data != NULL) {
-        printf("ƒ‡ÌÌ˚Â ÛÒÔÂ¯ÌÓ Á‡„ÛÊÂÌ˚ ËÁ Ù‡ÈÎ‡.\n");
+        printf("–î–∞–Ω–Ω—ã–µ —É—Å–ø–µ—à–Ω–æ –∑–∞–≥—Ä—É–∂–µ–Ω—ã –∏–∑ —Ñ–∞–π–ª–∞.\n");
     }
     else if (file == NULL) {
-        printf("Œ¯Ë·Í‡: ÕÂ Û‰‡ÂÚÒˇ ÓÚÍ˚Ú¸ Ù‡ÈÎ ‰Îˇ Á‡ÔËÒË.\n");
+        printf("–û—à–∏–±–∫–∞: –ù–µ —É–¥–∞–µ—Ç—Å—è –æ—Ç–∫—Ä—ã—Ç—å —Ñ–∞–π–ª –¥–ª—è –∑–∞–ø–∏—Å–∏.\n");
         return 0;
     }
     for (int i = 0; i < numRecords; i++) {
@@ -34,7 +176,7 @@ struct OperatingSystem* readDataFromFile(int* numRecords, char* filename) {
     char symbol;
     *numRecords = 0;
     if (file == NULL) {
-        printf("Œ¯Ë·Í‡: ÕÂ Û‰‡ÂÚÒˇ ÓÚÍ˚Ú¸ Ù‡ÈÎ ‰Îˇ ˜ÚÂÌËˇ.\n");
+        printf("–û—à–∏–±–∫–∞: –ù–µ —É–¥–∞–µ—Ç—Å—è –æ—Ç–∫—Ä—ã—Ç—å —Ñ–∞–π–ª –¥–ª—è —á—Ç–µ–Ω–∏—è.\n");
         return NULL;
     }
 
@@ -54,17 +196,19 @@ struct OperatingSystem* readDataFromFile(int* numRecords, char* filename) {
     fclose(file);
     return data;
 }
+
 void displayData(struct OperatingSystem* data, int numRecords) {
     if (data == NULL || numRecords == 0) {
-        printf("ÕÂÚ ‰‡ÌÌ˚ı ‰Îˇ ÔÂ˜‡ÚË.\n");
+        printf("–ù–µ—Ç –¥–∞–Ω–Ω—ã—Ö –¥–ª—è –ø–µ—á–∞—Ç–∏.\n");
     }
     else {
-        printf("%-15s %-15s %-10s %-15s %-10s\n", "–‡Á‡·ÓÚ˜ËÍ", "√Ó‰ ‚˚ÔÛÒÍ‡", "¬ÂÒËˇ", "Õ‡Á‚‡ÌËÂ", "÷ÂÌ‡");
+        printf("%-15s %-15s %-10s %-15s %-10s\n", "–†–∞–∑—Ä–∞–±–æ—Ç—á–∏–∫", "–ì–æ–¥ –≤—ã–ø—É—Å–∫–∞", "–í–µ—Ä—Å–∏—è", "–ù–∞–∑–≤–∞–Ω–∏–µ", "–¶–µ–Ω–∞");
         for (int i = 0; i < numRecords; i++) {
             printf("%-15s %-15d %-10s %-15s %-10.2f\n", data[i].developer, data[i].yearReleased, data[i].version, data[i].name, data[i].price);
         }
     }
 }
+
 struct OperatingSystem* searchData(struct OperatingSystem* data, int numRecords, struct OperatingSystem key) {
     struct OperatingSystem* foundRecords = (struct OperatingSystem*)calloc(numRecords, sizeof(struct OperatingSystem));
     int count = 0;
@@ -90,130 +234,41 @@ void addRecord(struct OperatingSystem** data, int* numRecords, struct OperatingS
     (*data)[*numRecords - 1] = newRecord;
 }
 
-// ‘ÛÌÍˆËˇ Ò‡‚ÌÂÌËˇ ‰Îˇ ÒÓÚËÓ‚ÍË ÔÓ Ì‡Á‚‡ÌË˛
-int compareByName(const void* a, const void* b) {
-    return strcmp(((struct OperatingSystem*)a)->name, ((struct OperatingSystem*)b)->name);
+char findMaxChar(struct OperatingSystem* array, int size)
+{
+    char maxElement = 0;
+
+    for (int i = 0; i < size; i++)
+        if (array[i].name[0] > maxElement) 
+            maxElement = array[i].name[0];
+
+    return maxElement;
 }
 
-void sort_select(struct OperatingSystem* data, int numRecords) {
-    qsort(data, numRecords, sizeof(struct OperatingSystem), compareByName);
-}
+void digitalSort(struct OperatingSystem* data, int numRecords)
+{
+    struct OperatingSystem* sortArray = malloc(sizeof(struct OperatingSystem) * numRecords);
+    int digitNumber = 1;//–†–∞–∑—Ä—è–¥ –∫–æ–¥–∞ —Å–∏–º–≤–æ–ª–∞
+    char maxElement = findMaxChar(data, numRecords);//–ú–∞–∫—Å–∏–º–∞–ª—å–Ω—ã–π(–ø–æ –∫–æ–¥—É) —Å–∏–º–≤–æ–ª
 
-int main() {
-    setlocale(LC_ALL, "Russian");
-    struct OperatingSystem* data = NULL;
-    int numRecords = 0;
-    int choice;
-    char filename[MAX_LENGTH];
-    int n = 0;
+    while ((int)maxElement / digitNumber > 0)
+    {
+        int arrayForSort[10] = { 0 };
 
-    printf("¬‚Â‰ËÚÂ ËÏˇ Ù‡ÈÎ‡: ");
-    scanf("%s", filename);
+        for (int i = 0; i < numRecords; i++)
+            arrayForSort[(data[i].name[0] / digitNumber) % 10]++;
 
-    while (1) {
-        printf("\n---------- ÃÂÌ˛ ----------\n");
-        printf("1. «‡„ÛÁÍ‡ ‰‡ÌÌ˚ı ËÁ Ù‡ÈÎ‡\n");
-        printf("2. ¬˚‚ÂÒÚË ‰‡ÌÌ˚Â\n");
-        printf("3. œÓËÒÍ Á‡ÔËÒË\n");
-        printf("4. —ÓÚËÓ‚Í‡ Á‡ÔËÒÂÈ\n");
-        printf("5. —Óı‡ÌËÚ¸ ‰‡ÌÌ˚Â ‚ Ù‡ÈÎ\n");
-        printf("6. ƒÓ·‡‚ËÚ¸ ÌÓ‚Û˛ Á‡ÔËÒ¸\n");
-        printf("0. ¬˚ıÓ‰\n");
-        printf("¬‚Â‰ËÚÂ Ò‚ÓÈ ‚˚·Ó: ");
-        scanf("%d", &choice);
-        switch (choice) {
-        case 0:
-            break;
-        case 1:
-            data = readDataFromFile(&numRecords, filename);
-            if (data != NULL) {
-                printf("ƒ‡ÌÌ˚Â ÛÒÔÂ¯ÌÓ Á‡„ÛÊÂÌ˚ ËÁ Ù‡ÈÎ‡.\n");
-            }
-            break;
-        case 2:
-            if (data == NULL || numRecords == 0) {
-                printf("ÕÂÚ ‰‡ÌÌ˚ı ‰Îˇ ÔÂ˜‡ÚË.\n");
-            }
-            else {
-                displayData(data, numRecords);
-            }
-            break;
-        case 3:
-        { int searchChoice;
-        printf("¬˚·ÂËÚÂ ÍËÚÂËÈ ÔÓËÒÍ‡:\n");
-        printf("1. –‡Á‡·ÓÚ˜ËÍ\n");
-        printf("2. √Ó‰ ‚˚ÔÛÒÍ‡\n");
-        printf("3. ¬ÂÒËˇ\n");
-        printf("¬‚Â‰ËÚÂ Ò‚ÓÈ ‚˚·Ó: ");
-        scanf("%d", &searchChoice);
+        for (int i = 1; i < 10; i++)
+            arrayForSort[i] += arrayForSort[i - 1];
 
-        struct OperatingSystem key = { "", 0, " ", " ", 0.f };
-        if (searchChoice == 1) {
-            printf("¬‚Â‰ËÚÂ ‡Á‡·ÓÚ˜ËÍ‡: ");
-            scanf("%s", key.developer);
-        }
-        else if (searchChoice == 2) {
-            printf("¬‚Â‰ËÚÂ „Ó‰ ‚˚ÔÛÒÍ‡: ");
-            scanf("%d", &key.yearReleased);
-        }
-        else if (searchChoice == 3) {
-            printf("¬‚Â‰ËÚÂ ‚ÂÒË˛: ");
-            scanf("%s", key.version);
-        }
+        for (int i = numRecords - 1; i >= 0; i--)
+            sortArray[--arrayForSort[(data[i].name[0] / digitNumber) % 10]] = data[i];
 
-        struct OperatingSystem* foundRecords = searchData(data, numRecords, key);
-        int numFoundRecords = 0;
-        for (int i = 0; i < numRecords; i++) {
-            if (foundRecords[i].yearReleased == 0) break;
-            numFoundRecords++;
-        }
+        for (int i = 0; i < numRecords; i++)
+            data[i] = sortArray[i];
 
-        printf("Õ‡È‰ÂÌÓ Á‡ÔËÒÂÈ: %d\n", numFoundRecords);
-        displayData(foundRecords, numFoundRecords);}
-        break;
-        case 4:
-            sort_select(data, numRecords);
-            displayData(data, numRecords);
-            break;
-        default:
-            printf("ÕÂÔ‡‚ËÎ¸Ì˚È ‚˚·Ó. œÓÊ‡ÎÛÈÒÚ‡, ÔÓ‚ÚÓËÚÂ ÔÓÔ˚ÚÍÛ.\n");
-            break;
-        case 5:
-            if (data == NULL || numRecords == 0) {
-                printf("ÕÂÚ ‰‡ÌÌ˚ı ‰Îˇ ÒÓı‡ÌÂÌËˇ.\n");
-            }
-            else {
-                writeDataToFile(data, numRecords, filename);
-                printf("ƒ‡ÌÌ˚Â ÛÒÔÂ¯ÌÓ ÒÓı‡ÌÂÌ˚ ‚ Ù‡ÈÎ.\n");
-            }
-            break;
-        case 6:
-        { struct OperatingSystem newRecord;
-        printf("¬‚Â‰ËÚÂ ‰‡ÌÌ˚Â ‰Îˇ ÌÓ‚ÓÈ Á‡ÔËÒË:\n");
-        printf("–‡Á‡·ÓÚ˜ËÍ: ");
-        scanf("%s", newRecord.developer);
-        printf("√Ó‰ ‚˚ÔÛÒÍ‡: ");
-        scanf("%d", &newRecord.yearReleased);
-        printf("¬ÂÒËˇ: ");
-        scanf("%s", newRecord.version);
-        printf("Õ‡Á‚‡ÌËÂ: ");
-        scanf("%s", newRecord.name);
-        printf("÷ÂÌ‡: ");
-        scanf("%f", &newRecord.price);
-        addRecord(&data, &numRecords, newRecord);
-        printf("ÕÓ‚‡ˇ Á‡ÔËÒ¸ ‰Ó·‡‚ÎÂÌ‡.\n");}
-        break;
-        }
-
-        if (choice == 0) {
-            break;
-        }
+        digitNumber *= 10;//–ü–µ—Ä–µ—Ö–æ–¥ –∫ —Å–ª–µ–¥—É—é—â–µ–º—É —Ä–∞–∑—Ä—è–¥—É
     }
+    free(sortArray); 
+}
 
-    free(data);
-    return 0;
-} 
-
-/*if (choice 0< && 5) {
-printf("ÕÂÔ‡‚ËÎ¸Ì˚È ‚˚·Ó. œÓÊ‡ÎÛÈÒÚ‡, ÔÓ‚ÚÓËÚÂ ÔÓÔ˚ÚÍÛ.\n");
-*/
